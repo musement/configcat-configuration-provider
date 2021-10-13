@@ -1,0 +1,17 @@
+<Project>
+  <PropertyGroup>
+    <Deterministic>True</Deterministic>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <Version>$([System.DateTime]::UtcNow.ToString("yyyy.MM.dd"))</Version>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <EnableNETAnalyzers>True</EnableNETAnalyzers>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+    <NoWarn>CA1812;CA2007</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+  </PropertyGroup>
+</Project>
