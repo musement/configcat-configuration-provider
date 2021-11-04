@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Moq;
 using Musement.Extensions.Configuration.ConfigCat;
 using System;
@@ -9,7 +9,7 @@ namespace ConfigCatProvider.Tests
     public class ConfigCatExtensionsTests
     {
         private Mock<IConfigurationBuilder> BuilderMock { get; }
-        
+
         public ConfigCatExtensionsTests()
         {
             BuilderMock = new();

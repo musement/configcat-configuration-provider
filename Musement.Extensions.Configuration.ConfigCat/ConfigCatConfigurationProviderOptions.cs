@@ -1,4 +1,4 @@
-﻿using ConfigCat.Client;
+using ConfigCat.Client;
 using System;
 
 namespace Musement.Extensions.Configuration.ConfigCat

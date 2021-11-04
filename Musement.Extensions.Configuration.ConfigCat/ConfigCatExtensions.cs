@@ -1,4 +1,4 @@
-﻿using Musement.Extensions.Configuration.ConfigCat;
+using Musement.Extensions.Configuration.ConfigCat;
 using System;
 
 namespace Microsoft.Extensions.Configuration

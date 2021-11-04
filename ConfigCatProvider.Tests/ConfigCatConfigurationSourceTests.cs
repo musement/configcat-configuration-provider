@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Moq;
 using Musement.Extensions.Configuration.ConfigCat;
 using Xunit;

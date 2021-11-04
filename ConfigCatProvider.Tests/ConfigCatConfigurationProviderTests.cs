@@ -1,4 +1,4 @@
-﻿using ConfigCat.Client;
+using ConfigCat.Client;
 using Microsoft.Extensions.Configuration;
 using Moq;
 using Musement.Extensions.Configuration.ConfigCat;
@@ -31,7 +31,7 @@ namespace ConfigCatProvider.Tests
                     c.SdkKey = "fake";
                 }
             };
-            
+
             using var sut = new ConfigCatConfigurationProvider(options);
 
             Assert.True(called);
@@ -147,8 +147,8 @@ namespace ConfigCatProvider.Tests
 
             raiseConfigurationChangedMethod!.Invoke(config, new object[]
             {
-                clientMock.Object, 
-                OnConfigurationChangedEventArgs.Empty 
+                clientMock.Object,
+                OnConfigurationChangedEventArgs.Empty
             });
 
             Assert.True(sut.TryGet("foo:bar", out var value));
@@ -319,7 +319,7 @@ namespace ConfigCatProvider.Tests
                 .ReturnsAsync(new[] { "foo__bar", "foo__baz" });
             clientMock
                 .Setup(c => c.GetValueAsync("foo__bar", It.IsAny<string?>(), It.IsAny<User>()))
-                .ReturnsAsync((string?) null!);
+                .ReturnsAsync((string?)null!);
 
             var options = new ConfigCatConfigurationProviderOptions
             {
