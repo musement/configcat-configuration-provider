@@ -6,7 +6,17 @@
 
   <ItemGroup>
     <PackageReference Include="ConfigCat.Client" Version="6.2.1" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.*" />
   </ItemGroup>
+
+  <PropertyGroup>
+      <IsPackable>true</IsPackable>
+      <PackageVersion>1.0</PackageVersion>
+      <Authors>Musement;Fabio Di Peri</Authors>
+      <Description>A .NET configuration provider for ConfigCat</Description>
+      <PackageLicenseExpression>MIT</PackageLicenseExpression>
+      <PackageProjectUrl>https://github.com/musement/configcat-configuration-provider</PackageProjectUrl>
+      <RepositoryUrl>https://github.com/musement/configcat-configuration-provider</RepositoryUrl>
+  </PropertyGroup>
 
 </Project>
