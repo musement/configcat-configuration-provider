@@ -3,7 +3,6 @@
     <Deterministic>True</Deterministic>
     <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
-    <Version>$([System.DateTime]::UtcNow.ToString("yyyy.MM.dd"))</Version>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
     <AnalysisLevel>latest</AnalysisLevel>
