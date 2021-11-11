@@ -38,7 +38,7 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          files: Musement.Extensions.Configuration.ConfigCat.${VERSION}.nupkg
+          files: Musement.Extensions.Configuration.ConfigCat.*.nupkg
 
       - name: Push
         env:
