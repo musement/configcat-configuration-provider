@@ -29,12 +29,36 @@ jobs:
         run: dotnet test
 
       - name: Pack
-        run: >
-          dotnet pack --configuration Release
-          Musement.Extensions.Configuration.ConfigCat/Musement.Extensions.Configuration.ConfigCat.csproj
-          -p:Version=${VERSION}
-          --output .
+      run: >
+        dotnet pack --configuration Release
+        Musement.Extensions.Configuration.ConfigCat/Musement.Extensions.Configuration.ConfigCat.csproj
+        -p:Version=${VERSION}
+        --output .
+
+      - name: Create Release
+        uses: actions/create_release@v1
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      - name: Upload package to releases
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./Musement.Extensions.Configuration.ConfigCat.${VERSION}.nupkg
+          asset_name: Musement.Extensions.Configuration.ConfigCat.${VERSION}.nupkg
+          asset_content_type: application/zip
+
       - name: Push
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
         run: >
           dotnet nuget push ./Musement.Extensions.Configuration.ConfigCat.${VERSION}.nupkg
           -k ${NUGET_API_KEY}
