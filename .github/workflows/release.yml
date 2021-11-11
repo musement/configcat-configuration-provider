@@ -36,7 +36,6 @@ jobs:
           --output .
       - name: Push
         run: >
-          dotnet nuget push Musement.Extensions.Configuration.ConfigCat.${VERSION}.nupkg
+          dotnet nuget push ./Musement.Extensions.Configuration.ConfigCat.${VERSION}.nupkg
           -k ${NUGET_API_KEY}
           -s https://api.nuget.org/v3/index.json
-
