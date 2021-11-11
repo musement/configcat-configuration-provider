@@ -1,4 +1,4 @@
-![Build status](https://github.com/musement/configcat-configuration-provider/actions/workflow/ci.yml/badge.svg)
+[![Build status](https://github.com/musement/configcat-configuration-provider/actions/workflows/ci.yml/badge.svg)](https://github.com/musement/configcat-configuration-provider/actions/workflows/ci.yml) [![Nuget package](https://img.shields.io/nuget/vpre/Musement.Extensions.Configuration.ConfigCat.svg)](https://www.nuget.org/packages/Musement.Extensions.Configuration.ConfigCat/1.0.3)
 
 This repository contains a provider for [Microsoft.Extensions.Configuration](https://www.nuget.org/packages/Microsoft.Extensions.Configuration/) that maps configuration stored in [ConfigCat](https://configcat.com/)
 
