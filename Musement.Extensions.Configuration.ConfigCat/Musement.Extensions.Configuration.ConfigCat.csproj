@@ -10,12 +10,17 @@
   </ItemGroup>
 
   <PropertyGroup>
-      <IsPackable>true</IsPackable>
-      <Authors>Musement;Fabio Di Peri</Authors>
-      <Description>A .NET configuration provider for ConfigCat</Description>
-      <PackageLicenseExpression>MIT</PackageLicenseExpression>
-      <PackageProjectUrl>https://github.com/musement/configcat-configuration-provider</PackageProjectUrl>
-      <RepositoryUrl>https://github.com/musement/configcat-configuration-provider</RepositoryUrl>
+    <IsPackable>true</IsPackable>
+    <Authors>Musement;Fabio Di Peri</Authors>
+    <Description>A .NET configuration provider for ConfigCat</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/musement/configcat-configuration-provider</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/musement/configcat-configuration-provider</RepositoryUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
 </Project>

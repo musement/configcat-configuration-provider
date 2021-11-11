@@ -4,7 +4,7 @@ This repository contains a provider for [Microsoft.Extensions.Configuration](htt
 
 ## Overview
 
-Storing configuration and feature flags in environment variables or 
+Storing configuration and feature flags in environment variables or
 `appsettings.json` may require a new deploy of the application to update
 something in some cases. This package extends the default configuration
 pipeline used in ASP.NET applications (or any other application that uses
@@ -50,9 +50,9 @@ the library will automatically update the configuration on a timer, which you
 can configure from this object. You can get more info about this object in the
 [official ConfigCat SDK docs](https://github.com/configcat/.net-sdk/).
 
-The options object also lets you set a filter (`KeyFilter` ) for the keys you 
-want to import, this is just a lambda function that returns `true` or `false` 
-respectively if you want to import a configuration key or not. 
+The options object also lets you set a filter (`KeyFilter` ) for the keys you
+want to import, this is just a lambda function that returns `true` or `false`
+respectively if you want to import a configuration key or not.
 The default always returns `true`.
 
 The `KeyMapper` lambda lets you customize how the ConfigCat key is transformed
@@ -68,6 +68,10 @@ The `Configuration` object from above is passed as the only parameter.
 
 This library follows [Semantic Versioning](http://semver.org/spec/v2.0.0.html)
 for the public releases.
+
+## Releases
+Packages are automatically built and published on nuget by a Github Actions
+workflow triggered by tags.
 
 ## How to build
 
