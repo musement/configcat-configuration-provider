@@ -36,25 +36,9 @@ jobs:
           --output .
 
       - name: Create Release
-        uses: actions/create_release@v1
-        id: create_release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
-
-      - name: Upload package to releases
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./Musement.Extensions.Configuration.ConfigCat.${VERSION}.nupkg
-          asset_name: Musement.Extensions.Configuration.ConfigCat.${VERSION}.nupkg
-          asset_content_type: application/zip
+          files: Musement.Extensions.Configuration.ConfigCat.${VERSION}.nupkg
 
       - name: Push
         env:
