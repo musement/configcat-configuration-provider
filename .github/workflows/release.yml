@@ -29,11 +29,11 @@ jobs:
         run: dotnet test
 
       - name: Pack
-      run: >
-        dotnet pack --configuration Release
-        Musement.Extensions.Configuration.ConfigCat/Musement.Extensions.Configuration.ConfigCat.csproj
-        -p:Version=${VERSION}
-        --output .
+        run: >
+          dotnet pack --configuration Release
+          Musement.Extensions.Configuration.ConfigCat/Musement.Extensions.Configuration.ConfigCat.csproj
+          -p:Version=${VERSION}
+          --output .
 
       - name: Create Release
         uses: actions/create_release@v1
