@@ -3,8 +3,8 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
+using ConfigCat.Client.Configuration;
 
 namespace Musement.Extensions.Configuration.ConfigCat
 {
@@ -17,16 +17,17 @@ namespace Musement.Extensions.Configuration.ConfigCat
 
         public ConfigCatConfigurationProvider(ConfigCatConfigurationProviderOptions options)
         {
-            var config = new AutoPollConfiguration();
-            config.OnConfigurationChanged += (s, e) => Reload();
-            options.Configuration(config);
+            var config = new ConfigCatClientOptions();
+            var autoPoll = PollingModes.AutoPoll();
+            autoPoll.OnConfigurationChanged += (s, e) => Reload();
 
+            options.Configuration(config);
             if (config is null || string.IsNullOrWhiteSpace(config.SdkKey))
             {
                 throw new InvalidOperationException("Missing ConfigCat SDK Key");
             }
 
-            _client = options.CreateClient(config);
+            _client = options.CreateClient(config, autoPoll);
             _keyFilter = options.KeyFilter ?? (_ => true);
             _keyMapper = options.KeyMapper ??
                 ((key, value) => key.Replace("__", ConfigurationPath.KeyDelimiter, StringComparison.InvariantCultureIgnoreCase));
