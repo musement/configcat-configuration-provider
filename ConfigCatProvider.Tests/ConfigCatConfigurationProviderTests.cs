@@ -17,7 +17,11 @@ namespace ConfigCatProvider.Tests
         {
             Options = new ConfigCatConfigurationProviderOptions
             {
-                Configuration = c => c.SdkKey = "foobar"
+                Configuration = c =>
+                {
+                    c.SdkKey = "foobar";
+                    return c;
+                }
             };
         }
 
@@ -31,6 +35,7 @@ namespace ConfigCatProvider.Tests
                 {
                     called = true;
                     c.SdkKey = "fake";
+                    return c;
                 }
             };
 
@@ -44,7 +49,7 @@ namespace ConfigCatProvider.Tests
         {
             var options = new ConfigCatConfigurationProviderOptions
             {
-                Configuration = _ => { }
+                Configuration = _ => _
             };
 
             Assert.Throws<InvalidOperationException>(() => new ConfigCatConfigurationProvider(options));
@@ -63,8 +68,12 @@ namespace ConfigCatProvider.Tests
 
             var options = new ConfigCatConfigurationProviderOptions
             {
-                Configuration = c => { c.SdkKey = "fake"; },
-                CreateClient = (_, _) => clientMock.Object
+                Configuration = c =>
+                {
+                    c.SdkKey = "fake";
+                    return c;
+                },
+                CreateClient = _ => clientMock.Object
             };
 
             using var sut = new ConfigCatConfigurationProvider(options);
@@ -88,10 +97,14 @@ namespace ConfigCatProvider.Tests
 
             var options = new ConfigCatConfigurationProviderOptions
             {
-                Configuration = c => { c.SdkKey = "fake"; },
+                Configuration = c =>
+                {
+                    c.SdkKey = "fake";
+                    return c;
+                },
                 KeyMapper = (key, value) => key.Replace("§§", ConfigurationPath.KeyDelimiter,
                     StringComparison.InvariantCultureIgnoreCase),
-                CreateClient = (_, _) => clientMock.Object
+                CreateClient = _ => clientMock.Object
             };
 
             using var sut = new ConfigCatConfigurationProvider(options);
@@ -102,57 +115,57 @@ namespace ConfigCatProvider.Tests
             Assert.Equal("dummy", value);
         }
 
-        // [Fact]
-        // public void ConfigCatRefreshTriggersReload()
-        // {
-        //     var clientMock = new Mock<IConfigCatClient>();
-        //     clientMock
-        //         .Setup(c => c.GetAllKeysAsync())
-        //         .ReturnsAsync(new[] { "foo__bar" });
-        //     clientMock
-        //         .Setup(c => c.GetValueAsync("foo__bar", It.IsAny<string?>(), It.IsAny<User>()))
-        //         .ReturnsAsync("dummy");
-        //
-        //     var config = new ConfigCatClientOptions();
-        //
-        //     var options = new ConfigCatConfigurationProviderOptions
-        //     {
-        //         Configuration = c =>
-        //         {
-        //             config = c;
-        //             c.SdkKey = "fake";
-        //         },
-        //         CreateClient = (_,_) => clientMock.Object
-        //     };
-        //
-        //     var autoPollConfig = (AutoPoll)config!.PollingMode;
-        //
-        //     using var sut = new ConfigCatConfigurationProvider(options);
-        //
-        //     Assert.NotNull(config);
-        //
-        //     sut.Load();
-        //
-        //     clientMock
-        //         .Setup(c => c.GetValueAsync("foo__bar", It.IsAny<string?>(), It.IsAny<User>()))
-        //         .ReturnsAsync("dummy2");
-        //
-        //     // This is very risky
-        //     var raiseConfigurationChangedMethod = autoPollConfig
-        //         .GetType()
-        //         .GetMethod("RaiseOnConfigurationChanged", BindingFlags.Instance | BindingFlags.NonPublic);
-        //
-        //     Assert.NotNull(raiseConfigurationChangedMethod);
-        //
-        //     raiseConfigurationChangedMethod!.Invoke(autoPollConfig, new object[]
-        //     {
-        //         clientMock.Object,
-        //         OnConfigurationChangedEventArgs.Empty
-        //     });
-        //
-        //     Assert.True(sut.TryGet("foo:bar", out var value));
-        //     Assert.Equal("dummy2", value);
-        // }
+        [Fact]
+        public void ConfigCatRefreshTriggersReload()
+        {
+            var clientMock = new Mock<IConfigCatClient>();
+            clientMock
+                .Setup(c => c.GetAllKeysAsync())
+                .ReturnsAsync(new[] { "foo__bar" });
+            clientMock
+                .Setup(c => c.GetValueAsync("foo__bar", It.IsAny<string?>(), It.IsAny<User>()))
+                .ReturnsAsync("dummy");
+
+            var autoPoll = PollingModes.AutoPoll();
+
+            var options = new ConfigCatConfigurationProviderOptions
+            {
+                Configuration = c =>
+                {
+                    c.PollingMode = autoPoll;
+                    c.DataGovernance = DataGovernance.EuOnly;
+                    c.SdkKey = "fake";
+                    return c;
+                },
+                CreateClient = _ => clientMock.Object
+            };
+
+            using var sut = new ConfigCatConfigurationProvider(options);
+
+            Assert.NotNull(autoPoll);
+
+            sut.Load();
+
+            clientMock
+                .Setup(c => c.GetValueAsync("foo__bar", It.IsAny<string?>(), It.IsAny<User>()))
+                .ReturnsAsync("dummy2");
+
+            // This is very risky
+            var raiseConfigurationChangedMethod = autoPoll!
+                .GetType()
+                .GetMethod("RaiseOnConfigurationChanged", BindingFlags.Instance | BindingFlags.NonPublic);
+
+            Assert.NotNull(raiseConfigurationChangedMethod);
+
+            raiseConfigurationChangedMethod!.Invoke(autoPoll, new object[]
+            {
+                clientMock.Object,
+                OnConfigurationChangedEventArgs.Empty
+            });
+
+            Assert.True(sut.TryGet("foo:bar", out var value));
+            Assert.Equal("dummy2", value);
+        }
 
         [Fact]
         public void ValueDontChangeUponRefreshIfNotChangedUpstream()
@@ -165,32 +178,34 @@ namespace ConfigCatProvider.Tests
                 .Setup(c => c.GetValueAsync("foo__bar", It.IsAny<string?>(), It.IsAny<User>()))
                 .ReturnsAsync("dummy");
 
-            ConfigCatClientOptions? config = null;
+            var autoPoll = PollingModes.AutoPoll();
 
             var options = new ConfigCatConfigurationProviderOptions
             {
                 Configuration = c =>
                 {
-                    config = c;
+                    c.PollingMode = autoPoll;
+                    c.DataGovernance = DataGovernance.EuOnly;
                     c.SdkKey = "fake";
+                    return c;
                 },
-                CreateClient = (_,_) => clientMock.Object
+                CreateClient = _ => clientMock.Object
             };
 
             using var sut = new ConfigCatConfigurationProvider(options);
 
-            Assert.NotNull(config);
+            Assert.NotNull(autoPoll);
 
             sut.Load();
 
             // This is very risky
-            var raiseConfigurationChangedMethod = config!.PollingMode
+            var raiseConfigurationChangedMethod = autoPoll!
                 .GetType()
                 .GetMethod("RaiseOnConfigurationChanged", BindingFlags.Instance | BindingFlags.NonPublic);
 
             Assert.NotNull(raiseConfigurationChangedMethod);
 
-            raiseConfigurationChangedMethod!.Invoke(config.PollingMode, new object[]
+            raiseConfigurationChangedMethod!.Invoke(autoPoll, new object[]
             {
                 clientMock.Object,
                 OnConfigurationChangedEventArgs.Empty
@@ -219,9 +234,13 @@ namespace ConfigCatProvider.Tests
 
             var options = new ConfigCatConfigurationProviderOptions
             {
-                Configuration = c => { c.SdkKey = "fake"; },
+                Configuration = c =>
+                {
+                    c.SdkKey = "fake";
+                    return c;
+                },
                 KeyFilter = k => k.Contains("bar", StringComparison.InvariantCultureIgnoreCase),
-                CreateClient = (_, _) => clientMock.Object
+                CreateClient = _ => clientMock.Object
             };
 
             using var sut = new ConfigCatConfigurationProvider(options);
@@ -252,9 +271,13 @@ namespace ConfigCatProvider.Tests
 
             var options = new ConfigCatConfigurationProviderOptions
             {
-                Configuration = c => { c.SdkKey = "fake"; },
+                Configuration = c =>
+                {
+                    c.SdkKey = "fake";
+                    return c;
+                },
                 KeyFilter = k => k.Contains("bar", StringComparison.InvariantCultureIgnoreCase),
-                CreateClient = (_, _) => clientMock.Object
+                CreateClient = _ => clientMock.Object
             };
 
             using var sut = new ConfigCatConfigurationProvider(options);
@@ -285,8 +308,12 @@ namespace ConfigCatProvider.Tests
 
             var options = new ConfigCatConfigurationProviderOptions
             {
-                Configuration = c => { c.SdkKey = "fake"; },
-                CreateClient = (_, _) => clientMock.Object
+                Configuration = c =>
+                {
+                    c.SdkKey = "fake";
+                    return c;
+                },
+                CreateClient = _ => clientMock.Object
             };
 
             using var sut = new ConfigCatConfigurationProvider(options);
@@ -313,8 +340,12 @@ namespace ConfigCatProvider.Tests
 
             var options = new ConfigCatConfigurationProviderOptions
             {
-                Configuration = c => { c.SdkKey = "fake"; },
-                CreateClient = (_, _) => clientMock.Object
+                Configuration = c =>
+                {
+                    c.SdkKey = "fake";
+                    return c;
+                },
+                CreateClient = _ => clientMock.Object
             };
 
             using var sut = new ConfigCatConfigurationProvider(options);

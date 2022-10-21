@@ -6,18 +6,16 @@ namespace Musement.Extensions.Configuration.ConfigCat
 {
     public class ConfigCatConfigurationProviderOptions
     {
-        public Action<ConfigCatClientOptions> Configuration { get; set; } =
-            _ => throw new InvalidOperationException(
-                "You must set ConfigCatClientOptions.ConfigurationBuilder.");
+        public Func<ConfigCatClientOptions, ConfigCatClientOptions>? Configuration { get; set; }
 
         public Func<string, bool>? KeyFilter { get; set; }
         public Func<string, string, string>? KeyMapper { get; set; }
 
-        public Func<ConfigCatClientOptions, AutoPoll, IConfigCatClient> CreateClient { get; set; } = (c, autoPoll) =>
+        public Func<ConfigCatClientOptions, IConfigCatClient> CreateClient { get; set; } = (c) =>
             new ConfigCatClient(
                 opt =>
                 {
-                    opt.PollingMode = autoPoll;
+                    opt.PollingMode = c.PollingMode;
                     opt.SdkKey = c.SdkKey;
                     opt.DataGovernance = c.DataGovernance;
 

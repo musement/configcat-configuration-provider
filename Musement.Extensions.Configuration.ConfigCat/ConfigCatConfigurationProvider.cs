@@ -18,16 +18,20 @@ namespace Musement.Extensions.Configuration.ConfigCat
         public ConfigCatConfigurationProvider(ConfigCatConfigurationProviderOptions options)
         {
             var config = new ConfigCatClientOptions();
-            var autoPoll = PollingModes.AutoPoll();
-            autoPoll.OnConfigurationChanged += (s, e) => Reload();
+            if (options.Configuration is null)
+            {
+                throw new InvalidOperationException ("You must set ConfigCatClientOptions.ConfigurationBuilder.");
+            }
 
-            options.Configuration(config);
+            options.Configuration.Invoke(config);
+            ((AutoPoll)config.PollingMode).OnConfigurationChanged += (s, e) => Reload();
+
             if (config is null || string.IsNullOrWhiteSpace(config.SdkKey))
             {
                 throw new InvalidOperationException("Missing ConfigCat SDK Key");
             }
 
-            _client = options.CreateClient(config, autoPoll);
+            _client = options.CreateClient(config);
             _keyFilter = options.KeyFilter ?? (_ => true);
             _keyMapper = options.KeyMapper ??
                 ((key, value) => key.Replace("__", ConfigurationPath.KeyDelimiter, StringComparison.InvariantCultureIgnoreCase));
