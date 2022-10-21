@@ -17,13 +17,19 @@ namespace Musement.Extensions.Configuration.ConfigCat
 
         public ConfigCatConfigurationProvider(ConfigCatConfigurationProviderOptions options)
         {
-            var config = new ConfigCatClientOptions();
             if (options.Configuration is null)
             {
                 throw new InvalidOperationException ("You must set ConfigCatClientOptions.ConfigurationBuilder.");
             }
 
+            var config = new ConfigCatClientOptions();
             options.Configuration.Invoke(config);
+
+            if (config.PollingMode.GetType() != typeof(AutoPoll))
+            {
+                throw new InvalidOperationException ("Only AutoPoll configuration is allowed.");
+            }
+
             ((AutoPoll)config.PollingMode).OnConfigurationChanged += (s, e) => Reload();
 
             if (config is null || string.IsNullOrWhiteSpace(config.SdkKey))

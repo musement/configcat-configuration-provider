@@ -22,7 +22,6 @@ namespace SampleApp
                         var conf = builder.Build();
                         o.Configuration = c =>
                         {
-                            c.PollingMode = PollingModes.AutoPoll();
                             c.SdkKey = conf["Secrets:ConfigCatKey"];
                             c.DataGovernance = DataGovernance.EuOnly;
                             return c;
