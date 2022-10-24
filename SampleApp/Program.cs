@@ -3,6 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Threading.Tasks;
+using ConfigCat.Client;
+using ConfigCat.Client.Configuration;
 
 namespace SampleApp
 {
@@ -21,7 +23,7 @@ namespace SampleApp
                         o.Configuration = c =>
                         {
                             c.SdkKey = conf["Secrets:ConfigCatKey"];
-                            c.DataGovernance = ConfigCat.Client.DataGovernance.EuOnly;
+                            c.DataGovernance = DataGovernance.EuOnly;
                         };
                         o.KeyMapper = (key, value) =>
                         {

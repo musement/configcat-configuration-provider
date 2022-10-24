@@ -4,6 +4,7 @@ using Moq;
 using Musement.Extensions.Configuration.ConfigCat;
 using System;
 using System.Reflection;
+using ConfigCat.Client.Configuration;
 using Xunit;
 
 namespace ConfigCatProvider.Tests
@@ -11,11 +12,15 @@ namespace ConfigCatProvider.Tests
     public class ConfigCatConfigurationProviderTests
     {
         private ConfigCatConfigurationProviderOptions Options { get; }
+
         public ConfigCatConfigurationProviderTests()
         {
             Options = new ConfigCatConfigurationProviderOptions
             {
-                Configuration = c => c.SdkKey = "foobar"
+                Configuration = c =>
+                {
+                    c.SdkKey = "foobar";
+                }
             };
         }
 
@@ -42,7 +47,7 @@ namespace ConfigCatProvider.Tests
         {
             var options = new ConfigCatConfigurationProviderOptions
             {
-                Configuration = _ => { }
+                Configuration = _ => {}
             };
 
             Assert.Throws<InvalidOperationException>(() => new ConfigCatConfigurationProvider(options));
@@ -93,7 +98,8 @@ namespace ConfigCatProvider.Tests
                 {
                     c.SdkKey = "fake";
                 },
-                KeyMapper = (key, value) => key.Replace("§§", ConfigurationPath.KeyDelimiter, StringComparison.InvariantCultureIgnoreCase),
+                KeyMapper = (key, value) => key.Replace("§§", ConfigurationPath.KeyDelimiter,
+                    StringComparison.InvariantCultureIgnoreCase),
                 CreateClient = _ => clientMock.Object
             };
 
@@ -116,13 +122,14 @@ namespace ConfigCatProvider.Tests
                 .Setup(c => c.GetValueAsync("foo__bar", It.IsAny<string?>(), It.IsAny<User>()))
                 .ReturnsAsync("dummy");
 
-            AutoPollConfiguration? config = null;
+            var autoPoll = PollingModes.AutoPoll();
 
             var options = new ConfigCatConfigurationProviderOptions
             {
                 Configuration = c =>
                 {
-                    config = c;
+                    c.PollingMode = autoPoll;
+                    c.DataGovernance = DataGovernance.EuOnly;
                     c.SdkKey = "fake";
                 },
                 CreateClient = _ => clientMock.Object
@@ -130,7 +137,7 @@ namespace ConfigCatProvider.Tests
 
             using var sut = new ConfigCatConfigurationProvider(options);
 
-            Assert.NotNull(config);
+            Assert.NotNull(autoPoll);
 
             sut.Load();
 
@@ -139,13 +146,13 @@ namespace ConfigCatProvider.Tests
                 .ReturnsAsync("dummy2");
 
             // This is very risky
-            var raiseConfigurationChangedMethod = config!
+            var raiseConfigurationChangedMethod = autoPoll!
                 .GetType()
                 .GetMethod("RaiseOnConfigurationChanged", BindingFlags.Instance | BindingFlags.NonPublic);
 
             Assert.NotNull(raiseConfigurationChangedMethod);
 
-            raiseConfigurationChangedMethod!.Invoke(config, new object[]
+            raiseConfigurationChangedMethod!.Invoke(autoPoll, new object[]
             {
                 clientMock.Object,
                 OnConfigurationChangedEventArgs.Empty
@@ -166,13 +173,14 @@ namespace ConfigCatProvider.Tests
                 .Setup(c => c.GetValueAsync("foo__bar", It.IsAny<string?>(), It.IsAny<User>()))
                 .ReturnsAsync("dummy");
 
-            AutoPollConfiguration? config = null;
+            var autoPoll = PollingModes.AutoPoll();
 
             var options = new ConfigCatConfigurationProviderOptions
             {
                 Configuration = c =>
                 {
-                    config = c;
+                    c.PollingMode = autoPoll;
+                    c.DataGovernance = DataGovernance.EuOnly;
                     c.SdkKey = "fake";
                 },
                 CreateClient = _ => clientMock.Object
@@ -180,18 +188,18 @@ namespace ConfigCatProvider.Tests
 
             using var sut = new ConfigCatConfigurationProvider(options);
 
-            Assert.NotNull(config);
+            Assert.NotNull(autoPoll);
 
             sut.Load();
 
             // This is very risky
-            var raiseConfigurationChangedMethod = config!
+            var raiseConfigurationChangedMethod = autoPoll!
                 .GetType()
                 .GetMethod("RaiseOnConfigurationChanged", BindingFlags.Instance | BindingFlags.NonPublic);
 
             Assert.NotNull(raiseConfigurationChangedMethod);
 
-            raiseConfigurationChangedMethod!.Invoke(config, new object[]
+            raiseConfigurationChangedMethod!.Invoke(autoPoll, new object[]
             {
                 clientMock.Object,
                 OnConfigurationChangedEventArgs.Empty
