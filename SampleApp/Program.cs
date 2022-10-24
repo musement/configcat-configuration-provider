@@ -24,7 +24,6 @@ namespace SampleApp
                         {
                             c.SdkKey = conf["Secrets:ConfigCatKey"];
                             c.DataGovernance = DataGovernance.EuOnly;
-                            return c;
                         };
                         o.KeyMapper = (key, value) =>
                         {

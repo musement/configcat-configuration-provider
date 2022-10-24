@@ -20,7 +20,6 @@ namespace ConfigCatProvider.Tests
                 Configuration = c =>
                 {
                     c.SdkKey = "foobar";
-                    return c;
                 }
             };
         }
@@ -35,7 +34,6 @@ namespace ConfigCatProvider.Tests
                 {
                     called = true;
                     c.SdkKey = "fake";
-                    return c;
                 }
             };
 
@@ -49,7 +47,7 @@ namespace ConfigCatProvider.Tests
         {
             var options = new ConfigCatConfigurationProviderOptions
             {
-                Configuration = _ => _
+                Configuration = _ => {}
             };
 
             Assert.Throws<InvalidOperationException>(() => new ConfigCatConfigurationProvider(options));
@@ -71,7 +69,6 @@ namespace ConfigCatProvider.Tests
                 Configuration = c =>
                 {
                     c.SdkKey = "fake";
-                    return c;
                 },
                 CreateClient = _ => clientMock.Object
             };
@@ -100,7 +97,6 @@ namespace ConfigCatProvider.Tests
                 Configuration = c =>
                 {
                     c.SdkKey = "fake";
-                    return c;
                 },
                 KeyMapper = (key, value) => key.Replace("§§", ConfigurationPath.KeyDelimiter,
                     StringComparison.InvariantCultureIgnoreCase),
@@ -135,7 +131,6 @@ namespace ConfigCatProvider.Tests
                     c.PollingMode = autoPoll;
                     c.DataGovernance = DataGovernance.EuOnly;
                     c.SdkKey = "fake";
-                    return c;
                 },
                 CreateClient = _ => clientMock.Object
             };
@@ -187,7 +182,6 @@ namespace ConfigCatProvider.Tests
                     c.PollingMode = autoPoll;
                     c.DataGovernance = DataGovernance.EuOnly;
                     c.SdkKey = "fake";
-                    return c;
                 },
                 CreateClient = _ => clientMock.Object
             };
@@ -237,7 +231,6 @@ namespace ConfigCatProvider.Tests
                 Configuration = c =>
                 {
                     c.SdkKey = "fake";
-                    return c;
                 },
                 KeyFilter = k => k.Contains("bar", StringComparison.InvariantCultureIgnoreCase),
                 CreateClient = _ => clientMock.Object
@@ -274,7 +267,6 @@ namespace ConfigCatProvider.Tests
                 Configuration = c =>
                 {
                     c.SdkKey = "fake";
-                    return c;
                 },
                 KeyFilter = k => k.Contains("bar", StringComparison.InvariantCultureIgnoreCase),
                 CreateClient = _ => clientMock.Object
@@ -311,7 +303,6 @@ namespace ConfigCatProvider.Tests
                 Configuration = c =>
                 {
                     c.SdkKey = "fake";
-                    return c;
                 },
                 CreateClient = _ => clientMock.Object
             };
@@ -343,7 +334,6 @@ namespace ConfigCatProvider.Tests
                 Configuration = c =>
                 {
                     c.SdkKey = "fake";
-                    return c;
                 },
                 CreateClient = _ => clientMock.Object
             };

@@ -16,7 +16,6 @@ namespace ConfigCatProvider.Tests
                 Configuration = c =>
                 {
                     c.SdkKey = "foobar";
-                    return c;
                 }
             };
         }

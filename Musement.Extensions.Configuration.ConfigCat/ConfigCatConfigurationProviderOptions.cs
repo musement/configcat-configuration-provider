@@ -6,7 +6,8 @@ namespace Musement.Extensions.Configuration.ConfigCat
 {
     public class ConfigCatConfigurationProviderOptions
     {
-        public Func<ConfigCatClientOptions, ConfigCatClientOptions>? Configuration { get; set; }
+        public Action<ConfigCatClientOptions> Configuration { get; set; } =
+            _ => throw new InvalidOperationException("You must set ConfigCatConfigurationProviderOptions.ConfigurationBuilder.");
 
         public Func<string, bool>? KeyFilter { get; set; }
         public Func<string, string, string>? KeyMapper { get; set; }
