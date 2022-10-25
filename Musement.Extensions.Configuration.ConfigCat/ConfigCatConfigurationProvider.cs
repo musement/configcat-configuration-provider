@@ -116,7 +116,12 @@ namespace Musement.Extensions.Configuration.ConfigCat
                 }
 
                 var valueString = value.ToString();
-                if (valueString!.Equals("True", StringComparison.Ordinal) || valueString.Equals("False", StringComparison.Ordinal)) valueString = valueString.ToLowerInvariant();
+                if (valueString!.Equals("True", StringComparison.Ordinal) ||
+#pragma warning disable CA1308
+                    // In order to not break compatibility we need to return "true" or "false" for boolean values
+                    // default comes as "True" and "False"
+                    valueString.Equals("False", StringComparison.Ordinal)) valueString = valueString.ToLowerInvariant();
+#pragma warning restore CA1308
 
                 var mappedKey = _keyMapper.Invoke(key, valueString);
                 set.Add((mappedKey, valueString));
