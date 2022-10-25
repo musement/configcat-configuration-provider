@@ -47,7 +47,7 @@ namespace ConfigCatProvider.Tests
         {
             var options = new ConfigCatConfigurationProviderOptions
             {
-                Configuration = _ => {}
+                Configuration = _ => { }
             };
 
             Assert.Throws<InvalidOperationException>(() => new ConfigCatConfigurationProvider(options));

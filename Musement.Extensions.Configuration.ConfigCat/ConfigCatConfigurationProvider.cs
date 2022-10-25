@@ -20,7 +20,7 @@ namespace Musement.Extensions.Configuration.ConfigCat
         {
             if (options.Configuration is null)
             {
-                throw new InvalidOperationException ("You must set ConfigCatClientOptions.ConfigurationBuilder.");
+                throw new InvalidOperationException("You must set ConfigCatClientOptions.ConfigurationBuilder.");
             }
 
             var config = new ConfigCatClientOptions();
@@ -28,7 +28,7 @@ namespace Musement.Extensions.Configuration.ConfigCat
 
             if (config.PollingMode.GetType() != typeof(AutoPoll))
             {
-                throw new InvalidOperationException ("Only AutoPoll configuration is allowed.");
+                throw new InvalidOperationException("Only AutoPoll configuration is allowed.");
             }
 
             ((AutoPoll)config.PollingMode).OnConfigurationChanged += (s, e) => Reload();
@@ -41,7 +41,8 @@ namespace Musement.Extensions.Configuration.ConfigCat
             _client = options.CreateClient(config);
             _keyFilter = options.KeyFilter ?? (_ => true);
             _keyMapper = options.KeyMapper ??
-                ((key, value) => key.Replace("__", ConfigurationPath.KeyDelimiter, StringComparison.InvariantCultureIgnoreCase));
+                         ((key, value) => key.Replace("__", ConfigurationPath.KeyDelimiter,
+                             StringComparison.InvariantCultureIgnoreCase));
         }
 
         private void Reload()
@@ -117,10 +118,11 @@ namespace Musement.Extensions.Configuration.ConfigCat
 
                 var valueString = value.ToString();
                 if (valueString!.Equals("True", StringComparison.Ordinal) ||
+                    valueString.Equals("False", StringComparison.Ordinal))
 #pragma warning disable CA1308
                     // In order to not break compatibility we need to return "true" or "false" for boolean values
                     // default comes as "True" and "False"
-                    valueString.Equals("False", StringComparison.Ordinal)) valueString = valueString.ToLowerInvariant();
+                    valueString = valueString.ToLowerInvariant();
 #pragma warning restore CA1308
 
                 var mappedKey = _keyMapper.Invoke(key, valueString);
