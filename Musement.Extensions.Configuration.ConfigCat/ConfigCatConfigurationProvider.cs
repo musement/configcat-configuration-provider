@@ -2,6 +2,7 @@ using ConfigCat.Client;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using ConfigCat.Client.Configuration;
@@ -114,8 +115,11 @@ namespace Musement.Extensions.Configuration.ConfigCat
                     continue;
                 }
 
-                var mappedKey = _keyMapper.Invoke(key, value.ToString()!);
-                set.Add((mappedKey, value.ToString())!);
+                var valueString = value.ToString();
+                if (valueString!.Equals("True", StringComparison.Ordinal) || valueString.Equals("False", StringComparison.Ordinal)) valueString = valueString.ToLowerInvariant();
+
+                var mappedKey = _keyMapper.Invoke(key, valueString);
+                set.Add((mappedKey, valueString));
             }
 
             return set;
