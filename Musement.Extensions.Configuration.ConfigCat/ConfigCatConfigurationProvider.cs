@@ -107,15 +107,15 @@ namespace Musement.Extensions.Configuration.ConfigCat
                     continue;
                 }
 
-                var value = await _client.GetValueAsync<string?>(key, default);
+                var value = await _client.GetValueAsync<object?>(key, default);
 
                 if (value is null)
                 {
                     continue;
                 }
 
-                var mappedKey = _keyMapper.Invoke(key, value);
-                set.Add((mappedKey, value));
+                var mappedKey = _keyMapper.Invoke(key, value.ToString()!);
+                set.Add((mappedKey, value.ToString())!);
             }
 
             return set;
