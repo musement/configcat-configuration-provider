@@ -47,7 +47,7 @@ namespace ConfigCatProvider.Tests
         {
             var options = new ConfigCatConfigurationProviderOptions
             {
-                Configuration = _ => {}
+                Configuration = _ => { }
             };
 
             Assert.Throws<InvalidOperationException>(() => new ConfigCatConfigurationProvider(options));
@@ -61,7 +61,7 @@ namespace ConfigCatProvider.Tests
                 .Setup(c => c.GetAllKeysAsync())
                 .ReturnsAsync(new[] { "foo__bar" });
             clientMock
-                .Setup(c => c.GetValueAsync("foo__bar", It.IsAny<string?>(), It.IsAny<User>()))
+                .Setup(c => c.GetValueAsync("foo__bar", It.IsAny<object?>(), It.IsAny<User>()))
                 .ReturnsAsync("dummy");
 
             var options = new ConfigCatConfigurationProviderOptions
@@ -89,7 +89,7 @@ namespace ConfigCatProvider.Tests
                 .Setup(c => c.GetAllKeysAsync())
                 .ReturnsAsync(new[] { "foo§§bar" });
             clientMock
-                .Setup(c => c.GetValueAsync("foo§§bar", It.IsAny<string?>(), It.IsAny<User>()))
+                .Setup(c => c.GetValueAsync("foo§§bar", It.IsAny<object?>(), It.IsAny<User>()))
                 .ReturnsAsync("dummy");
 
             var options = new ConfigCatConfigurationProviderOptions
@@ -119,7 +119,7 @@ namespace ConfigCatProvider.Tests
                 .Setup(c => c.GetAllKeysAsync())
                 .ReturnsAsync(new[] { "foo__bar" });
             clientMock
-                .Setup(c => c.GetValueAsync("foo__bar", It.IsAny<string?>(), It.IsAny<User>()))
+                .Setup(c => c.GetValueAsync("foo__bar", It.IsAny<object?>(), It.IsAny<User>()))
                 .ReturnsAsync("dummy");
 
             var autoPoll = PollingModes.AutoPoll();
@@ -142,7 +142,7 @@ namespace ConfigCatProvider.Tests
             sut.Load();
 
             clientMock
-                .Setup(c => c.GetValueAsync("foo__bar", It.IsAny<string?>(), It.IsAny<User>()))
+                .Setup(c => c.GetValueAsync("foo__bar", It.IsAny<object?>(), It.IsAny<User>()))
                 .ReturnsAsync("dummy2");
 
             // This is very risky
@@ -170,7 +170,7 @@ namespace ConfigCatProvider.Tests
                 .Setup(c => c.GetAllKeysAsync())
                 .ReturnsAsync(new[] { "foo__bar" });
             clientMock
-                .Setup(c => c.GetValueAsync("foo__bar", It.IsAny<string?>(), It.IsAny<User>()))
+                .Setup(c => c.GetValueAsync("foo__bar", It.IsAny<object?>(), It.IsAny<User>()))
                 .ReturnsAsync("dummy");
 
             var autoPoll = PollingModes.AutoPoll();
@@ -217,12 +217,12 @@ namespace ConfigCatProvider.Tests
                 .Setup(c => c.GetAllKeysAsync())
                 .ReturnsAsync(new[] { "foo__bar", "foo__baz" });
             clientMock
-                .Setup(c => c.GetValueAsync("foo__bar", It.IsAny<string?>(), It.IsAny<User>()))
+                .Setup(c => c.GetValueAsync("foo__bar", It.IsAny<object?>(), It.IsAny<User>()))
                 .ReturnsAsync("dummy")
                 .Verifiable();
 
             clientMock
-                .Setup(c => c.GetValueAsync("foo__baz", It.IsAny<string?>(), It.IsAny<User>()))
+                .Setup(c => c.GetValueAsync("foo__baz", It.IsAny<object?>(), It.IsAny<User>()))
                 .ReturnsAsync("dummy")
                 .Verifiable();
 
@@ -241,10 +241,10 @@ namespace ConfigCatProvider.Tests
             sut.Load();
 
             clientMock
-                .Verify(c => c.GetValueAsync("foo__bar", It.IsAny<string?>(), It.IsAny<User>()), Times.Once);
+                .Verify(c => c.GetValueAsync("foo__bar", It.IsAny<object?>(), It.IsAny<User>()), Times.Once);
 
             clientMock
-                .Verify(c => c.GetValueAsync("foo__baz", It.IsAny<string?>(), It.IsAny<User>()), Times.Never);
+                .Verify(c => c.GetValueAsync("foo__baz", It.IsAny<object?>(), It.IsAny<User>()), Times.Never);
         }
 
         [Fact]
@@ -255,11 +255,11 @@ namespace ConfigCatProvider.Tests
                 .Setup(c => c.GetAllKeysAsync())
                 .ReturnsAsync(new[] { "foo__bar", "foo__baz" });
             clientMock
-                .Setup(c => c.GetValueAsync("foo__bar", It.IsAny<string?>(), It.IsAny<User>()))
+                .Setup(c => c.GetValueAsync("foo__bar", It.IsAny<object?>(), It.IsAny<User>()))
                 .ReturnsAsync("dummy");
 
             clientMock
-                .Setup(c => c.GetValueAsync("foo__baz", It.IsAny<string?>(), It.IsAny<User>()))
+                .Setup(c => c.GetValueAsync("foo__baz", It.IsAny<object?>(), It.IsAny<User>()))
                 .ReturnsAsync("dummy2");
 
             var options = new ConfigCatConfigurationProviderOptions
@@ -289,12 +289,12 @@ namespace ConfigCatProvider.Tests
                 .Setup(c => c.GetAllKeysAsync())
                 .ReturnsAsync(new[] { "foo__bar", "foo__baz" });
             clientMock
-                .Setup(c => c.GetValueAsync("foo__bar", It.IsAny<string?>(), It.IsAny<User>()))
+                .Setup(c => c.GetValueAsync("foo__bar", It.IsAny<object?>(), It.IsAny<User>()))
                 .ReturnsAsync("dummy")
                 .Verifiable();
 
             clientMock
-                .Setup(c => c.GetValueAsync("foo__baz", It.IsAny<string?>(), It.IsAny<User>()))
+                .Setup(c => c.GetValueAsync("foo__baz", It.IsAny<object?>(), It.IsAny<User>()))
                 .ReturnsAsync("dummy")
                 .Verifiable();
 
@@ -312,10 +312,10 @@ namespace ConfigCatProvider.Tests
             sut.Load();
 
             clientMock
-                .Verify(c => c.GetValueAsync("foo__bar", It.IsAny<string?>(), It.IsAny<User>()), Times.Once);
+                .Verify(c => c.GetValueAsync("foo__bar", It.IsAny<object?>(), It.IsAny<User>()), Times.Once);
 
             clientMock
-                .Verify(c => c.GetValueAsync("foo__baz", It.IsAny<string?>(), It.IsAny<User>()), Times.Once);
+                .Verify(c => c.GetValueAsync("foo__baz", It.IsAny<object?>(), It.IsAny<User>()), Times.Once);
         }
 
         [Fact]
@@ -326,8 +326,8 @@ namespace ConfigCatProvider.Tests
                 .Setup(c => c.GetAllKeysAsync())
                 .ReturnsAsync(new[] { "foo__bar", "foo__baz" });
             clientMock
-                .Setup(c => c.GetValueAsync("foo__bar", It.IsAny<string?>(), It.IsAny<User>()))
-                .ReturnsAsync((string?)null!);
+                .Setup(c => c.GetValueAsync("foo__bar", It.IsAny<object?>(), It.IsAny<User>()))
+                .ReturnsAsync((object?)null!);
 
             var options = new ConfigCatConfigurationProviderOptions
             {
