@@ -13,10 +13,8 @@ namespace ConfigCatProvider.Tests
         {
             Options = new ConfigCatConfigurationProviderOptions
             {
-                Configuration = c =>
-                {
-                    c.SdkKey = "foobar";
-                }
+                SdkKey = "foobar",
+                Configuration = c => { }
             };
         }
 

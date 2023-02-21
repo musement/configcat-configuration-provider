@@ -31,14 +31,14 @@ namespace Musement.Extensions.Configuration.ConfigCat
                 throw new InvalidOperationException("Only AutoPoll configuration is allowed.");
             }
 
-            ((AutoPoll)config.PollingMode).OnConfigurationChanged += (s, e) => Reload();
-
-            if (config is null || string.IsNullOrWhiteSpace(config.SdkKey))
+            if (config is null)
             {
-                throw new InvalidOperationException("Missing ConfigCat SDK Key");
+                throw new InvalidOperationException("Missing ConfigCat configuration");
             }
 
             _client = options.CreateClient(config);
+            _client.ConfigChanged += (s, e) => Reload();
+
             _keyFilter = options.KeyFilter ?? (_ => true);
             _keyMapper = options.KeyMapper ??
                          ((key, value) => key.Replace("__", ConfigurationPath.KeyDelimiter,

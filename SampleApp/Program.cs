@@ -8,7 +8,7 @@ using ConfigCat.Client.Configuration;
 
 namespace SampleApp
 {
-    class Program
+    sealed class Program
     {
         static async Task Main()
         {
@@ -20,9 +20,9 @@ namespace SampleApp
                     builder.AddConfigCat(o =>
                     {
                         var conf = builder.Build();
+                        o.SdkKey = conf["Secrets:ConfigCatKey"];
                         o.Configuration = c =>
                         {
-                            c.SdkKey = conf["Secrets:ConfigCatKey"];
                             c.DataGovernance = DataGovernance.EuOnly;
                         };
                         o.KeyMapper = (key, value) =>
