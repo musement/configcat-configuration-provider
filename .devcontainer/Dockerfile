@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim
+FROM mcr.microsoft.com/dotnet/sdk:7.0-bullseye-slim
 ARG USERNAME=vscode
 ARG USER_UID=1000
 ARG USER_GID=${USER_UID}
@@ -16,7 +16,7 @@ RUN apt-get update && apt-get -y install --no-install-recommends apt-utils dialo
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME\
     && chmod 0440 /etc/sudoers.d/$USERNAME
 
-RUN wget -qO- https://dot.net/v1/dotnet-install.sh | bash -s -- --channel 3.1 --runtime aspnetcore \
+RUN wget -qO- https://dot.net/v1/dotnet-install.sh | bash -s -- --channel 6.0 --runtime aspnetcore \
     && cp -r /root/.dotnet/shared/Microsoft.AspNetCore.App /usr/share/dotnet/shared \
     && cp -r /root/.dotnet/shared/Microsoft.NETCore.App /usr/share/dotnet/shared
 
