@@ -40,9 +40,10 @@ namespace Musement.Extensions.Configuration.ConfigCat
             _client.ConfigChanged += (s, e) => Reload();
 
             _keyFilter = options.KeyFilter ?? (_ => true);
+#pragma warning disable CA1307 // Specify StringComparison for clarity - REASON: support for netstandard2.0
             _keyMapper = options.KeyMapper ??
-                         ((key, value) => key.Replace("__", ConfigurationPath.KeyDelimiter,
-                             StringComparison.InvariantCultureIgnoreCase));
+                         ((key, value) => key.Replace("__", ConfigurationPath.KeyDelimiter));
+#pragma warning restore CA1307 // Specify StringComparison for clarity
         }
 
         private void Reload()

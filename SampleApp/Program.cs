@@ -27,7 +27,9 @@ namespace SampleApp
                         };
                         o.KeyMapper = (key, value) =>
                         {
-                            var mappedKey = key.Replace("__", ConfigurationPath.KeyDelimiter, StringComparison.OrdinalIgnoreCase);
+#pragma warning disable CA1307 // Specify StringComparison for clarity REASON: support net48
+                            var mappedKey = key.Replace("__", ConfigurationPath.KeyDelimiter);
+#pragma warning restore CA1307 // Specify StringComparison for clarity
                             return "Cat:" + mappedKey;
                         };
                     });
@@ -38,9 +40,9 @@ namespace SampleApp
 
             do
             {
-                foreach (var (key, value) in config.GetSection("Cat").AsEnumerable())
+                foreach (var configSection in config.GetSection("Cat").AsEnumerable())
                 {
-                    Console.WriteLine($"{key}: {value}");
+                    Console.WriteLine($"{configSection.Key}: {configSection.Value}");
                 }
 
                 await Task.Delay(15_000);
