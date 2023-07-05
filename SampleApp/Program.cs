@@ -1,10 +1,9 @@
+using ConfigCat.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Threading.Tasks;
-using ConfigCat.Client;
-using ConfigCat.Client.Configuration;
 
 namespace SampleApp
 {
